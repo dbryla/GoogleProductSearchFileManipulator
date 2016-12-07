@@ -1,13 +1,12 @@
 package io.github.dbryla.gpsfm;
 
-import spark.ModelAndView;
-import spark.Request;
-import spark.template.velocity.VelocityTemplateEngine;
-
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import spark.ModelAndView;
+import spark.Request;
+import spark.template.velocity.VelocityTemplateEngine;
 
 class View {
 

@@ -16,5 +16,5 @@
 </section>
 
 <footer>
-   <button ic-put-to="/products/report">Generate report!</button>
+    <button onClick="window.open('/products/report');">Generate report!</button>
 </footer>

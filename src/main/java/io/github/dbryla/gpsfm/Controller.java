@@ -1,14 +1,12 @@
 package io.github.dbryla.gpsfm;
 
-import lombok.extern.slf4j.Slf4j;
-import spark.Spark;
-
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
-import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import lombok.extern.slf4j.Slf4j;
+import spark.Spark;
 
 @Slf4j
 class Controller {
@@ -21,18 +19,17 @@ class Controller {
             productService.changeStatus(id);
             return view.renderList(request, productService.getAll());
         });
-        Spark.put("/products/report", (request, response) -> {
+        Spark.get("/products/report", (request, response) -> {
             log.info("Generate report");
-            /*HttpServletResponse raw = response.raw();
+            HttpServletResponse raw = response.raw();
             raw.setContentType("application/octet-stream");
             raw.setHeader("Content-Disposition", "attachment; filename=GoogleProductSearch.zip");
             ZipOutputStream outputStream = new ZipOutputStream(new BufferedOutputStream(raw.getOutputStream()));
-            outputStream.putNextEntry(new ZipEntry("GoogleProductSearch"));
+            outputStream.putNextEntry(new ZipEntry("public/GoogleProductSearch"));
             productService.generateReport(outputStream);
             outputStream.flush();
-            outputStream.close();*/
-            response.type("text/xml");
-            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?><news>" + request.params("section") + "</news>";
+            outputStream.close();
+            return raw;
         });
     }
 

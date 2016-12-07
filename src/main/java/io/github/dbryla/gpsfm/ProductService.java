@@ -1,16 +1,17 @@
 package io.github.dbryla.gpsfm;
 
-import io.github.dbryla.gpsfm.jaxb.Feed;
-import lombok.extern.slf4j.Slf4j;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import java.io.*;
+import java.io.OutputStream;
+import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import io.github.dbryla.gpsfm.jaxb.Feed;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 class ProductService {
@@ -32,8 +33,8 @@ class ProductService {
     private void loadProducts(String resourcePath) {
         try {
             Unmarshaller unmarshaller = jc.createUnmarshaller();
-            feed = (Feed) unmarshaller.unmarshal(new FileInputStream(resourcePath));
-        } catch (JAXBException | FileNotFoundException e) {
+            feed = (Feed) unmarshaller.unmarshal(getClass().getClassLoader().getResource(resourcePath));
+        } catch (JAXBException e) {
             log.error("Problem while loading products from storage.", e);
             return;
         }
@@ -50,16 +51,19 @@ class ProductService {
                 .findAny().ifPresent(Product::changeIncludeStatus);
     }
 
-    void generateReport(OutputStream outputStream) {
+    String generateReport(OutputStream outputStream) {
         try {
             Marshaller marshaller = jc.createMarshaller();
             feed.setEntries(products.stream()
                     .filter(Product::isIncluded)
                     .map(Product::toEntry)
                     .collect(Collectors.toList()));
+            StringWriter stringWriter = new StringWriter();
             marshaller.marshal(feed, outputStream);
+            return stringWriter.toString();
         } catch (JAXBException e) {
             log.error("Problem while generating report.", e);
+            return "ERROR";
         }
     }
 }
