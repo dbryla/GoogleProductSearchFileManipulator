@@ -1,0 +1,20 @@
+<header>
+    <h1>Products</h1>
+</header>
+
+<section id="main">
+    <ul id="product-list">
+        #foreach($product in $products)
+            <li>
+                <div class="view">
+                    <input type="checkbox" class="toggle" ic-put-to="/products/$product.id/toggle" #if($product.included)checked#end>
+                    <label>$product.title</label>
+                </div>
+            </li>
+        #end
+    </ul>
+</section>
+
+<footer>
+   <button ic-put-to="/products/report">Generate report!</button>
+</footer>
